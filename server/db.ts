@@ -13,9 +13,11 @@ export const db =
     password: "7273IFDWeivb9mzgAp0K",
     database: "bnqbnctylez7kikru54q",
     charset: "utf8mb4",
-    connectionLimit: 2, // Keep very low for Clever Cloud free tier
+    connectionLimit: 1, // STRICT LIMIT: Clever Cloud free tier allows only 5 connections total. Next.js build runs multiple workers.
     waitForConnections: true,
     queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
   });
 
 if (process.env.NODE_ENV !== "production") globalForDb.db = db;
