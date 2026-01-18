@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 CREATE TABLE IF NOT EXISTS competencies (
     id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    description TEXT,
     created_on DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
