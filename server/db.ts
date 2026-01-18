@@ -20,5 +20,5 @@ export const db =
     keepAliveInitialDelay: 0,
   });
 
-if (process.env.NODE_ENV !== "production") globalForDb.db = db;
+globalForDb.db = db;
 
