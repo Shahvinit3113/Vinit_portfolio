@@ -18,6 +18,7 @@ export const db =
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
+    connectTimeout: 10000, // 10 second timeout for serverless cold starts
   });
 
 globalForDb.db = db;
