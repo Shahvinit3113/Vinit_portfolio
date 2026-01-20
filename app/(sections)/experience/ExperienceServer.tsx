@@ -3,7 +3,7 @@ import ExperienceClient from "./ExperienceClient";
 
 export default async function ExperienceServer() {
   try {
-    const [experiences] = await db.query<any[]>("SELECT * FROM experience ORDER BY period DESC");
+    const [experiences] = await db.query<any[]>("SELECT * FROM experience ORDER BY created_on DESC");
     const [skills] = await db.query<any[]>("SELECT * FROM experience_skills");
     const [achievements] = await db.query<any[]>("SELECT * FROM experience_achievements");
 

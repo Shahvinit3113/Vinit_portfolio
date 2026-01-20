@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 export default function Hero() {
   const [settings, setSettings] = useState<Record<string, string>>({});
+  const [imageLoading, setImageLoading] = useState(true);
 
 
   useEffect(() => {
@@ -42,7 +43,20 @@ export default function Hero() {
           {/* Main container */}
           <div className="relative h-full bg-gradient-to-br from-primary/10 via-card to-accent/10 rounded-2xl md:rounded-3xl overflow-hidden border border-border/50 backdrop-blur-sm group hover:border-primary/30 transition-all duration-500">
             {settings.user_image ? (
-              <img src={settings.user_image} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <>
+                {/* Skeleton loader */}
+                {imageLoading && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-muted animate-pulse flex items-center justify-center">
+                    <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  </div>
+                )}
+                <img
+                  src={settings.user_image}
+                  alt={name}
+                  className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                  onLoad={() => setImageLoading(false)}
+                />
+              </>
             ) : (
               <>
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />

@@ -1,10 +1,15 @@
 
-import { getHashnodePost } from "@/lib/hashnode";
+import { getHashnodePost, getHashnodeComments } from "@/lib/hashnode";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import LikeButton from "@/components/blog/LikeButton";
+import CommentsSection from "@/components/blog/CommentsSection";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -13,6 +18,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     if (!post) {
         notFound();
     }
+
+    // Fetch comments using the post ID
+    const comments = await getHashnodeComments(post.id);
 
     return (
         <>
@@ -62,19 +70,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         )}
                     </header>
 
-                    {/* Author */}
-                    <div className="flex items-center justify-center gap-3 border-t border-b border-border py-4 mb-6">
-                        {post.author.profilePicture && (
-                            <img
-                                src={post.author.profilePicture}
-                                alt={post.author.name}
-                                className="w-10 h-10 rounded-full"
-                            />
-                        )}
-                        <div className="text-left">
-                            <p className="font-semibold text-sm">{post.author.name}</p>
-                            <p className="text-xs text-muted-foreground">Author</p>
+                    {/* Author & Like Section */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-b border-border py-4 mb-6">
+                        <div className="flex items-center gap-3">
+                            {post.author.profilePicture && (
+                                <img
+                                    src={post.author.profilePicture}
+                                    alt={post.author.name}
+                                    className="w-10 h-10 rounded-full"
+                                />
+                            )}
+                            <div className="text-left">
+                                <p className="font-semibold text-sm">{post.author.name}</p>
+                                <p className="text-xs text-muted-foreground">Author</p>
+                            </div>
                         </div>
+
+                        <LikeButton
+                            reactionCount={post.reactionCount || 0}
+                            postUrl={post.url}
+                            slug={slug}
+                        />
                     </div>
 
                     {/* Content */}
@@ -83,9 +99,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         dangerouslySetInnerHTML={{ __html: post.content.html }}
                     />
 
+                    {/* Comments Section */}
+                    <CommentsSection
+                        comments={comments}
+                        postUrl={post.url}
+                        responseCount={post.responseCount || 0}
+                        slug={slug}
+                    />
+
                 </article>
             </main>
             <Footer />
         </>
     );
 }
+

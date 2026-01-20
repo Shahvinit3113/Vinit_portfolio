@@ -19,6 +19,8 @@ export async function getHashnodePosts() {
               publishedAt
               readTimeInMinutes
               url
+              reactionCount
+              responseCount
             }
           }
         }
@@ -63,6 +65,8 @@ export async function getHashnodePosts() {
       }),
       readTime: `${node.readTimeInMinutes} min read`,
       category: "Tech", // Hashnode posts might have tags, but for now generic
+      reactionCount: node.reactionCount || 0,
+      responseCount: node.responseCount || 0,
     }));
   } catch (error) {
     console.error("Error fetching Hashnode posts:", error);
@@ -86,6 +90,9 @@ export async function getHashnodePost(slug: string) {
           }
           publishedAt
           readTimeInMinutes
+          url
+          reactionCount
+          responseCount
           author {
             name
             profilePicture
@@ -116,3 +123,87 @@ export async function getHashnodePost(slug: string) {
     return null;
   }
 }
+
+export async function getHashnodeComments(postId: string) {
+  const query = `
+    query GetPostComments($postId: ID!) {
+      post(id: $postId) {
+        comments(first: 50) {
+          edges {
+            node {
+              id
+              content {
+                html
+              }
+              author {
+                name
+                profilePicture
+              }
+              dateAdded
+              totalReactions
+              replies(first: 10) {
+                edges {
+                  node {
+                    id
+                    content {
+                      html
+                    }
+                    author {
+                      name
+                      profilePicture
+                    }
+                    dateAdded
+                    totalReactions
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch(HASHNODE_GQL_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query,
+        variables: { postId },
+      }),
+      cache: 'no-store',
+    });
+
+    const { data } = await response.json();
+
+    if (!data?.post?.comments?.edges) {
+      return [];
+    }
+
+    return data.post.comments.edges.map(({ node }: any) => ({
+      id: node.id,
+      content: node.content?.html || "",
+      author: {
+        name: node.author?.name || "Anonymous",
+        avatar: node.author?.profilePicture || "",
+      },
+      dateAdded: node.dateAdded,
+      totalReactions: node.totalReactions || 0,
+      replies: node.replies?.edges?.map(({ node: reply }: any) => ({
+        id: reply.id,
+        content: reply.content?.html || "",
+        author: {
+          name: reply.author?.name || "Anonymous",
+          avatar: reply.author?.profilePicture || "",
+        },
+        dateAdded: reply.dateAdded,
+        totalReactions: reply.totalReactions || 0,
+      })) || [],
+    }));
+  } catch (error) {
+    console.error("Error fetching Hashnode comments:", error);
+    return [];
+  }
+}
+
