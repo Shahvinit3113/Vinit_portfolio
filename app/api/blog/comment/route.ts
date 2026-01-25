@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
         const id = uuidv4();
         await db.query(
-            "INSERT INTO blog_comments (id, post_slug, author_name, author_email, content, is_approved) VALUES (?, ?, ?, ?, ?, 0)",
+            "INSERT INTO blog_comments (id, post_slug, author_name, author_email, content, is_approved) VALUES (?, ?, ?, ?, ?, 1)",
             [id, slug, name, email || null, content]
         );
 

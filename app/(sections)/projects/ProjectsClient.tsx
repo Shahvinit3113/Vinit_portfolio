@@ -66,23 +66,31 @@ export default function ProjectsClient({ projects }: { projects: any[] }) {
 
                 {/* LINKS */}
                 <div className="flex gap-4 pt-2">
-                  <a
-                    href={project.links.github}
-                    className="inline-flex items-center gap-2 text-primary hover:text-accent transition-all duration-300 font-semibold group/link"
-                  >
-                    <Github size={16} />
-                    Code
-                    <ArrowUpRight size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
-                  </a>
+                  {project.links.github && (
+                    <a
+                      href={project.links.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-primary hover:text-accent transition-all duration-300 font-semibold group/link"
+                    >
+                      <Github size={16} />
+                      Code
+                      <ArrowUpRight size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
+                    </a>
+                  )}
 
-                  <a
-                    href={project.links.live}
-                    className="inline-flex items-center gap-2 text-primary hover:text-accent transition-all duration-300 font-semibold group/link"
-                  >
-                    <ExternalLink size={16} />
-                    Live Demo
-                    <ArrowUpRight size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
-                  </a>
+                  {project.links.live && (
+                    <a
+                      href={project.links.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-primary hover:text-accent transition-all duration-300 font-semibold group/link"
+                    >
+                      <ExternalLink size={16} />
+                      Live Demo
+                      <ArrowUpRight size={14} className="group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300" />
+                    </a>
+                  )}
                 </div>
 
               </div>

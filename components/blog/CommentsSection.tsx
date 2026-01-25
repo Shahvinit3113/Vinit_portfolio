@@ -18,6 +18,7 @@ interface Comment {
 
 interface CommentsSectionProps {
     comments: Comment[];
+    dbComments?: Comment[];
     postUrl: string;
     responseCount: number;
     slug: string;
@@ -84,7 +85,7 @@ function CommentCard({ comment, isReply = false }: { comment: Comment; isReply?:
     );
 }
 
-export default function CommentsSection({ comments, postUrl, responseCount, slug }: CommentsSectionProps) {
+export default function CommentsSection({ comments, dbComments = [], postUrl, responseCount, slug }: CommentsSectionProps) {
     const [localComments, setLocalComments] = useState<Comment[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [name, setName] = useState("");
@@ -130,7 +131,7 @@ export default function CommentsSection({ comments, postUrl, responseCount, slug
         }
     };
 
-    const allComments = [...localComments, ...comments];
+    const allComments = [...localComments, ...dbComments, ...comments];
 
     return (
         <section className="mt-12 pt-8 border-t border-border/50">
@@ -139,9 +140,9 @@ export default function CommentsSection({ comments, postUrl, responseCount, slug
                 <h2 className="text-2xl font-bold flex items-center gap-2">
                     <MessageCircle className="text-primary" size={24} />
                     Comments
-                    {(responseCount + localComments.length) > 0 && (
+                    {(responseCount + localComments.length + dbComments.length) > 0 && (
                         <span className="text-base font-normal text-muted-foreground">
-                            ({responseCount + localComments.length})
+                            ({responseCount + localComments.length + dbComments.length})
                         </span>
                     )}
                 </h2>

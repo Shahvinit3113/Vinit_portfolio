@@ -27,6 +27,23 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PUT(request: Request) {
+    try {
+        const { slug, project_id } = await request.json();
+        if (!slug) return NextResponse.json({ error: "Slug is required" }, { status: 400 });
+
+        await db.query(
+            "UPDATE featured_blogs SET project_id = ? WHERE slug = ?",
+            [project_id || null, slug]
+        );
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error("Error updating featured blog:", error);
+        return NextResponse.json({ error: "Failed to update featured blog" }, { status: 500 });
+    }
+}
+
 export async function DELETE(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -39,3 +56,4 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: "Failed to remove featured blog" }, { status: 500 });
     }
 }
+

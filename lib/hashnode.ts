@@ -21,6 +21,11 @@ export async function getHashnodePosts() {
               url
               reactionCount
               responseCount
+              series {
+                id
+                name
+                slug
+              }
             }
           }
         }
@@ -64,9 +69,14 @@ export async function getHashnodePosts() {
         day: "numeric",
       }),
       readTime: `${node.readTimeInMinutes} min read`,
-      category: "Tech", // Hashnode posts might have tags, but for now generic
+      category: "Tech",
       reactionCount: node.reactionCount || 0,
       responseCount: node.responseCount || 0,
+      series: node.series ? {
+        id: node.series.id,
+        name: node.series.name,
+        slug: node.series.slug,
+      } : null,
     }));
   } catch (error) {
     console.error("Error fetching Hashnode posts:", error);

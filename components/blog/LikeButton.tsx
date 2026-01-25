@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart, MessageCircle, ExternalLink } from "lucide-react";
 
 interface LikeButtonProps {
     reactionCount: number;
+    initialLocalLikes?: number;
     postUrl: string;
     slug: string;
 }
 
-export default function LikeButton({ reactionCount, postUrl, slug }: LikeButtonProps) {
+export default function LikeButton({ reactionCount, initialLocalLikes = 0, postUrl, slug }: LikeButtonProps) {
     const [localLikes, setLocalLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -43,16 +44,14 @@ export default function LikeButton({ reactionCount, postUrl, slug }: LikeButtonP
     };
 
     // Check if already liked on mount
-    useState(() => {
-        if (typeof window !== 'undefined') {
-            const likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]');
-            if (likedPosts.includes(slug)) {
-                setHasLiked(true);
-            }
+    useEffect(() => {
+        const likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]');
+        if (likedPosts.includes(slug)) {
+            setHasLiked(true);
         }
-    });
+    }, [slug]);
 
-    const totalLikes = reactionCount + localLikes;
+    const totalLikes = reactionCount + initialLocalLikes + localLikes;
 
     return (
         <div className="flex items-center gap-4">
@@ -61,8 +60,8 @@ export default function LikeButton({ reactionCount, postUrl, slug }: LikeButtonP
                 onClick={handleLike}
                 disabled={hasLiked}
                 className={`group flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${hasLiked
-                        ? 'bg-red-500/10 border-red-500/30 text-red-500'
-                        : 'bg-card border-border/50 hover:border-red-500/50 hover:bg-red-500/5 text-muted-foreground hover:text-red-500'
+                    ? 'bg-red-500/10 border-red-500/30 text-red-500'
+                    : 'bg-card border-border/50 hover:border-red-500/50 hover:bg-red-500/5 text-muted-foreground hover:text-red-500'
                     }`}
             >
                 <Heart

@@ -1,7 +1,7 @@
 import { getHashnodePosts } from "@/lib/hashnode";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import BlogClient from "../(sections)/blog/BlogClient";
+import BlogSeriesList from "@/components/blog/BlogSeriesList";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -14,7 +14,7 @@ export default async function AllBlogsPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen pt-24 pb-8">
+            <main className="min-h-screen pt-24 pb-16">
                 <div className="max-w-6xl mx-auto px-6">
                     {/* Back Button */}
                     <Link
@@ -23,8 +23,18 @@ export default async function AllBlogsPage() {
                     >
                         <ArrowLeft size={16} /> Back to Home
                     </Link>
+
+                    <div className="text-center mb-16">
+                        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+                            All Articles
+                        </h1>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                            Explore my technical writings, tutorials, and thoughts on software development.
+                        </p>
+                    </div>
+
+                    <BlogSeriesList posts={posts} />
                 </div>
-                <BlogClient posts={posts} showViewAll={false} />
             </main>
             <Footer />
         </>
