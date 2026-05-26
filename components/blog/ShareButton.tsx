@@ -14,8 +14,14 @@ export default function ShareButton({ title, text, slug }: ShareButtonProps) {
     const [copied, setCopied] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const [shareUrl, setShareUrl] = useState("");
+
     // Close dropdown when clicking outside
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            setShareUrl(`${window.location.origin}/blog/${slug}`);
+        }
+
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
@@ -25,15 +31,6 @@ export default function ShareButton({ title, text, slug }: ShareButtonProps) {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    const getShareUrl = () => {
-        if (typeof window !== "undefined") {
-            return `${window.location.origin}/blog/${slug}`;
-        }
-        return "";
-    };
-
-    const shareUrl = getShareUrl();
 
     const handleCopy = async () => {
         try {

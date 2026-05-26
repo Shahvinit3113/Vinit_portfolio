@@ -2,10 +2,10 @@ const mysql = require("mysql2/promise");
 
 (async () => {
     const db = await mysql.createConnection({
-        host: "bnqbnctylez7kikru54q-mysql.services.clever-cloud.com",
-        user: "uzihuoxvbywt4bng",
-        password: "7273IFDWeivb9mzgAp0K",
-        database: "bnqbnctylez7kikru54q",
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         charset: "utf8mb4",
     });
 

@@ -1,4 +1,4 @@
-import { getHashnodePosts } from "@/lib/hashnode";
+import { getDevtoPosts } from "@/lib/devto";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import BlogSeriesList from "@/components/blog/BlogSeriesList";
@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 export const dynamic = 'force-dynamic';
 
 export default async function AllBlogsPage() {
-    const posts = await getHashnodePosts();
+    const posts = await getDevtoPosts();
 
     return (
         <>

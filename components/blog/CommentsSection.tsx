@@ -162,7 +162,7 @@ export default function CommentsSection({ comments, dbComments = [], postUrl, re
                         className="inline-flex items-center gap-2 px-4 py-2.5 bg-card border border-border text-muted-foreground rounded-xl font-medium hover:border-primary/50 hover:text-primary transition-all duration-300"
                     >
                         <ExternalLink size={16} />
-                        Hashnode
+                        Dev.to
                     </a>
                 </div>
             </div>

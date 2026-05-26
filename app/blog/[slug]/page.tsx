@@ -1,5 +1,5 @@
 
-import { getHashnodePost, getHashnodeComments } from "@/lib/hashnode";
+import { getDevtoPost, getDevtoComments } from "@/lib/devto";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Calendar, Clock, User, ArrowLeft, FolderOpen, ExternalLink } from "lucide-react";
@@ -37,7 +37,7 @@ async function getLinkedProject(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const post = await getHashnodePost(slug);
+    const post = await getDevtoPost(slug);
 
     if (!post) {
         return {
@@ -104,7 +104,7 @@ async function getLocalComments(slug: string) {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const post = await getHashnodePost(slug);
+    const post = await getDevtoPost(slug);
 
     if (!post) {
         notFound();
@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     // Fetch comments and linked project
     const [comments, linkedProject, localLikes, localComments] = await Promise.all([
-        getHashnodeComments(post.id),
+        getDevtoComments(post.id),
         getLinkedProject(slug),
         getLocalLikes(slug),
         getLocalComments(slug)
@@ -229,7 +229,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                     {/* Content */}
                     <div
-                        className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-xl"
+                        className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-xl [&_.highlight__panel]:hidden [&_.js-actions-panel]:!hidden"
                         dangerouslySetInnerHTML={{ __html: post.content.html }}
                     />
 

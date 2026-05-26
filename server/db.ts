@@ -8,10 +8,10 @@ const globalForDb = globalThis as unknown as {
 export const db =
   globalForDb.db ??
   mysql.createPool({
-    host: "bnqbnctylez7kikru54q-mysql.services.clever-cloud.com",
-    user: "uzihuoxvbywt4bng",
-    password: "7273IFDWeivb9mzgAp0K",
-    database: "bnqbnctylez7kikru54q",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     charset: "utf8mb4",
     connectionLimit: 1, // STRICT LIMIT: Clever Cloud free tier allows only 5 connections total. Next.js build runs multiple workers.
     waitForConnections: true,

@@ -1,10 +1,10 @@
-import { getHashnodePosts } from "@/lib/hashnode";
+import { getDevtoPosts } from "@/lib/devto";
 import { db } from "@/server/db";
 import BlogClient from "./BlogClient";
 
 export default async function BlogServer() {
     try {
-        const posts = await getHashnodePosts();
+        const posts = await getDevtoPosts();
         const [featuredRows] = await db.query<any[]>("SELECT slug FROM featured_blogs");
         const featuredSlugs = featuredRows.map((r) => r.slug);
 

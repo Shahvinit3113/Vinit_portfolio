@@ -71,7 +71,7 @@ export default function LikeButton({ reactionCount, initialLocalLikes = 0, postU
                 <span className="font-medium">{totalLikes}</span>
             </button>
 
-            {/* React on Hashnode Link */}
+            {/* React on Dev.to Link */}
             <a
                 href={postUrl}
                 target="_blank"
@@ -79,7 +79,7 @@ export default function LikeButton({ reactionCount, initialLocalLikes = 0, postU
                 className="flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-card text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-300"
             >
                 <ExternalLink size={16} />
-                <span className="text-sm font-medium">React on Hashnode</span>
+                <span className="text-sm font-medium">React on Dev.to</span>
             </a>
         </div>
     );

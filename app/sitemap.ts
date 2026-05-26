@@ -1,6 +1,6 @@
 
 import { MetadataRoute } from 'next';
-import { getHashnodePosts } from '@/lib/hashnode';
+import { getDevtoPosts } from '@/lib/devto';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Base URL
@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Static routes
     const routes = [
         '',
+        '/blogs',
         '/#projects',
         '/#blog',
         '/#contact',
@@ -20,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // Fetch dynamic blog posts
-    const posts = await getHashnodePosts();
+    const posts = await getDevtoPosts();
 
     const blogRoutes = posts.map((post: any) => ({
         url: `${baseUrl}/blog/${post.slug}`,

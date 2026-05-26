@@ -17,7 +17,7 @@ const SOCIAL_FIELDS = [
     { key: "linkedin", label: "LinkedIn URL", icon: Linkedin, placeholder: "https://linkedin.com/in/username" },
     { key: "email", label: "Email Address", icon: Mail, placeholder: "hello@example.com" },
     { key: "instagram", label: "Instagram URL", icon: Instagram, placeholder: "https://instagram.com/username" },
-    { key: "hashnode", label: "Hashnode URL", icon: ExternalLink, placeholder: "https://username.hashnode.dev" },
+    { key: "devto", label: "Dev.to URL", icon: ExternalLink, placeholder: "https://dev.to/username" },
 ];
 
 export default function SettingsPage() {

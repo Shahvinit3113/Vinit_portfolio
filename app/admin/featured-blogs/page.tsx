@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Star, RefreshCw, FolderOpen, Link2 } from "lucide-react";
+import { Star, RefreshCw, FolderOpen, Link2, ExternalLink } from "lucide-react";
 
 export default function FeaturedBlogsPage() {
     const [allPosts, setAllPosts] = useState<any[]>([]);
@@ -19,7 +19,7 @@ export default function FeaturedBlogsPage() {
         setRefreshing(true);
         try {
             const [postsRes, featuredRes, projectsRes] = await Promise.all([
-                axios.get("/api/admin/hashnode-posts"),
+                axios.get("/api/admin/devto-posts"),
                 axios.get("/api/admin/featured-blogs"),
                 axios.get("/api/admin/projects")
             ]);
@@ -78,7 +78,7 @@ export default function FeaturedBlogsPage() {
                         <Star className="text-primary" /> Featured Blogs
                     </h2>
                     <p className="text-muted-foreground text-sm mt-1">
-                        Select which Hashnode blogs appear on homepage and link to projects.
+                        Select which Dev.to blogs appear on homepage and link to projects.
                     </p>
                 </div>
                 <button
@@ -104,22 +104,40 @@ export default function FeaturedBlogsPage() {
             {/* Posts List */}
             <div className="bg-card border border-border/50 rounded-xl shadow-sm overflow-hidden">
                 <div className="divide-y divide-border/50">
-                    {allPosts.length === 0 ? (
+                    {allPosts.length === 0 && featuredBlogs.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
                             <Star className="mx-auto mb-3 opacity-50" size={32} />
-                            No posts found. Check your Hashnode username.
+                            No posts found. Check your Dev.to username.
                         </div>
                     ) : (
-                        allPosts.map((post) => {
+                        [
+                            ...allPosts,
+                            ...featuredBlogs
+                                .filter((f: any) => !allPosts.some(p => p.slug === f.slug))
+                                .map((f: any) => ({
+                                    id: f.id,
+                                    slug: f.slug,
+                                    title: f.slug, // Fallback to slug if title isn't available
+                                    date: "Unknown Date",
+                                    readTime: "Dev.to API fetch failed",
+                                }))
+                        ].map((post) => {
                             const isFeatured = featuredSlugs.includes(post.slug);
                             return (
                                 <div
-                                    key={post.id}
+                                    key={post.id || post.slug}
                                     className={`p-4 transition ${isFeatured ? 'bg-primary/5' : 'hover:bg-muted/30'}`}
                                 >
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-semibold line-clamp-1">{post.title}</div>
+                                            <div className="font-semibold line-clamp-1 flex items-center gap-2">
+                                                {post.title}
+                                                {post.url && (
+                                                    <a href={post.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" title="View on Dev.to">
+                                                        <ExternalLink size={14} />
+                                                    </a>
+                                                )}
+                                            </div>
                                             <div className="text-sm text-muted-foreground">{post.date} • {post.readTime}</div>
                                         </div>
                                         <button
