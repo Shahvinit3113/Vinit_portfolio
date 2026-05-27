@@ -3,7 +3,7 @@ const USERNAME = "vinitshah"; // Assuming default username based on profile
 
 export async function getDevtoPosts() {
   try {
-    const response = await fetch(`${DEVTO_API_ENDPOINT}/articles?username=${USERNAME}`, {
+    const response = await fetch(`${DEVTO_API_ENDPOINT}/articles/latest?username=${USERNAME}`, {
       cache: 'no-store',
     });
 
