@@ -59,7 +59,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
             </div>
 
             {/* Featured */}
-            {(p.featured === 1 || p.featured === true || p.featured === '1') && (
+            {(p.featured === 1 || p.featured === true) && (
               <span className="px-2 py-1 text-xs rounded-full bg-yellow-500/20 text-yellow-600 font-semibold">
                 ⭐ Featured
               </span>
