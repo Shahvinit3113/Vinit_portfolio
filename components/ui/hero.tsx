@@ -6,13 +6,16 @@ import { useEffect, useState } from 'react'
 
 export default function Hero() {
   const [settings, setSettings] = useState<Record<string, string>>({});
+  const [imageLoading, setImageLoading] = useState(true);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true);
 
 
   useEffect(() => {
     fetch('/api/settings')
       .then(res => res.json())
       .then(data => setSettings(data))
-      .catch(() => { });
+      .catch(() => { })
+      .finally(() => setIsLoadingSettings(false));
   }, []);
 
 
@@ -41,9 +44,21 @@ export default function Hero() {
 
           {/* Main container */}
           <div className="relative h-full bg-gradient-to-br from-primary/10 via-card to-accent/10 rounded-2xl md:rounded-3xl overflow-hidden border border-border/50 backdrop-blur-sm group hover:border-primary/30 transition-all duration-500">
+            {/* Loading State (Settings or Image) */}
+            {(isLoadingSettings || (settings.user_image && imageLoading)) && (
+              <div className="absolute inset-0 z-20 bg-gradient-to-br from-muted/50 to-muted animate-pulse flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+              </div>
+            )}
+
             {settings.user_image ? (
-              <img src={settings.user_image} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            ) : (
+              <img
+                src={settings.user_image}
+                alt={name}
+                className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                onLoad={() => setImageLoading(false)}
+              />
+            ) : !isLoadingSettings && (
               <>
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
                 <div className="h-full flex flex-col items-center justify-center gap-4 md:gap-6 text-center p-6 md:p-8">

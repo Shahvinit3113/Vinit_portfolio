@@ -17,7 +17,7 @@ const SOCIAL_FIELDS = [
     { key: "linkedin", label: "LinkedIn URL", icon: Linkedin, placeholder: "https://linkedin.com/in/username" },
     { key: "email", label: "Email Address", icon: Mail, placeholder: "hello@example.com" },
     { key: "instagram", label: "Instagram URL", icon: Instagram, placeholder: "https://instagram.com/username" },
-    { key: "hashnode", label: "Hashnode URL", icon: ExternalLink, placeholder: "https://username.hashnode.dev" },
+    { key: "devto", label: "Dev.to URL", icon: ExternalLink, placeholder: "https://dev.to/username" },
 ];
 
 export default function SettingsPage() {
@@ -49,34 +49,25 @@ export default function SettingsPage() {
         setSettings({ ...settings, [key]: value });
     };
 
-    // Direct Cloudinary upload using unsigned preset
+    // Direct upload using API route
     const uploadToCloudinary = async (file: File, folder: string): Promise<string | null> => {
-        // Use your Cloudinary cloud name
-        const cloudName = "dbnggxch7";
-        const uploadPreset = "portfolio_unsigned";
-
-        // Use auto for everything - Cloudinary handles PDFs better as auto (image/document)
-        // This ensures they are public and viewable
-        const resourceType = "auto";
-
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", uploadPreset);
         formData.append("folder", folder);
 
         try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+            const res = await fetch("/api/upload", {
                 method: "POST",
                 body: formData,
             });
             const data = await res.json();
 
-            if (data.error) {
+            if (!res.ok) {
                 console.error("Cloudinary error:", data.error);
-                throw new Error(data.error.message);
+                throw new Error(data.error || "Upload failed");
             }
 
-            return data.secure_url;
+            return data.url;
         } catch (error: any) {
             console.error("Upload error:", error);
             throw error;
@@ -93,7 +84,7 @@ export default function SettingsPage() {
                 setMessage(`${key === "user_image" ? "Image" : "Resume"} uploaded successfully!`);
             }
         } catch (error: any) {
-            setMessage(error.message || "Upload failed. Make sure you have created an unsigned upload preset named 'portfolio_unsigned' in Cloudinary.");
+            setMessage(error.message || "Upload failed. Make sure you have configured Cloudinary correctly in .env.local.");
         } finally {
             setUploading(false);
         }

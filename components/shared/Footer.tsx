@@ -65,7 +65,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li><a href="/resume.pdf" download="Shah_Vinit_Resume.pdf" className="text-xs text-muted-foreground hover:text-primary transition-all duration-300 flex items-center gap-1"><Download size={10} /> Resume</a></li>
                 {settings.github && <li><a href={settings.github} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-all duration-300">GitHub</a></li>}
-                {settings.hashnode && <li><a href={settings.hashnode} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-all duration-300">Hashnode</a></li>}
+                {settings.devto && <li><a href={settings.devto} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-primary transition-all duration-300">Dev.to</a></li>}
                 <li><Link href="/blogs" className="text-xs text-muted-foreground hover:text-primary transition-all duration-300">Blog</Link></li>
               </ul>
             </div>

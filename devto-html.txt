@@ -1,0 +1,479 @@
+<p>Modern applications rely heavily on APIs. Whether it’s a mobile app, SaaS platform, ERP system, or AI-powered application, APIs are the bridge that connects everything together.</p>
+
+<p>Building a simple API is easy. Building a scalable, secure, and maintainable API is much harder.</p>
+
+<p>Many developers focus only on making endpoints work, but in real-world production systems, poorly designed APIs can lead to:</p>
+
+<ul>
+<li>security vulnerabilities</li>
+<li>slow performance</li>
+<li>difficult maintenance</li>
+<li>frontend integration issues</li>
+<li>unexpected production crashes</li>
+</ul>
+
+<p>In this blog, we’ll explore some of the most common mistakes developers make while building APIs and how to avoid them.</p>
+
+
+<hr>
+
+<h2>
+  <a name="1-mixing-all-logic-inside-controllers" href="#1-mixing-all-logic-inside-controllers">
+  </a>
+  1. Mixing All Logic Inside Controllers
+</h2>
+
+<p>One of the most common mistakes is putting all business logic directly inside route handlers or controllers.</p>
+
+<p>Example:<br>
+</p>
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>app.post('/users', async (req, res) =&gt; {
+  // validation
+  // database queries
+  // email sending
+  // business logic
+  // response handling
+})
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>At first, this looks manageable. But as the application grows, controllers become huge and difficult to maintain.</p>
+
+<h3>
+  <a name="why-this-is-bad-hard-to-debug" href="#why-this-is-bad-hard-to-debug">
+  </a>
+  Why This Is Bad hard to debug:
+</h3>
+
+<ul>
+<li>duplicated logic</li>
+<li>difficult testing</li>
+<li>poor scalability</li>
+<li>Better Approach</li>
+</ul>
+
+<h3>
+  <a name="use-a-layered-architecture" href="#use-a-layered-architecture">
+  </a>
+  Use a layered architecture:
+</h3>
+
+<ul>
+<li>routes</li>
+<li>controllers</li>
+<li>services</li>
+<li>repositories</li>
+<li>utilities</li>
+</ul>
+
+<p>Example structure:<br>
+</p>
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>src/
+ ├── routes/
+ ├── controllers/
+ ├── services/
+ ├── repositories/
+ ├── middlewares/
+ └── utils/
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>This keeps the code clean and scalable.</p>
+
+
+<hr>
+
+<h2>
+  <a name="2-poor-error-handling" href="#2-poor-error-handling">
+  </a>
+  2. Poor Error Handling
+</h2>
+
+<h3>
+  <a name="many-apis-return-generic-responses-like" href="#many-apis-return-generic-responses-like">
+  </a>
+  Many APIs return generic responses like:
+</h3>
+
+
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>{
+  "error": "Something went wrong"
+}
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>This creates confusion for frontend developers and makes debugging difficult.</p>
+
+<h3>
+  <a name="common-problems" href="#common-problems">
+  </a>
+  Common Problems
+</h3>
+
+<ul>
+<li>inconsistent responses</li>
+<li>missing error details</li>
+<li>no centralized error handling</li>
+</ul>
+
+<h3>
+  <a name="better-approach" href="#better-approach">
+  </a>
+  Better Approach
+</h3>
+
+<p>Use proper error messages and status codes.</p>
+
+<p>Example:<br>
+</p>
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>{
+  "success": false,
+  "message": "Invalid email format"
+}
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>Also implement centralized error middleware in frameworks like Node.js and Express.</p>
+
+
+<hr>
+
+<h2>
+  <a name="3-using-incorrect-http-status-codes" href="#3-using-incorrect-http-status-codes">
+  </a>
+  3. Using Incorrect HTTP Status Codes
+</h2>
+
+<p>Some developers return 200 OK for every response, even when errors occur.</p>
+
+<p>This is a huge mistake.</p>
+
+<h3>
+  <a name="correct-status-codes" href="#correct-status-codes">
+  </a>
+  Correct Status Codes
+</h3>
+
+<div class="table-wrapper-paragraph"><table>
+<thead>
+<tr>
+<th>Status Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Resource Created</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+</tr>
+</tbody>
+</table></div>
+
+<p>Using proper status codes improves:</p>
+
+<ul>
+<li>debugging</li>
+<li>frontend handling</li>
+<li>API consistency</li>
+<li>developer experience</li>
+</ul>
+
+
+<hr>
+
+<h2>
+  <a name="4-writing-slow-database-queries" href="#4-writing-slow-database-queries">
+  </a>
+  4. Writing Slow Database Queries
+</h2>
+
+<p>A fast API with slow database queries is still a slow API.<br>
+This is one of the biggest performance issues in backend systems.</p>
+<h3>
+  <a name="common-mistakes" href="#common-mistakes">
+  </a>
+  Common Mistakes
+</h3>
+
+<ul>
+<li>using <code>SELECT *</code>
+</li>
+<li>fetching unnecessary data</li>
+<li>no indexing</li>
+<li>N+1 query problems</li>
+<li>loading thousands of rows at once</li>
+</ul>
+
+<p>Example bad query:<br>
+</p>
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>SELECT * FROM users;
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<h3>
+  <a name="better-approach" href="#better-approach">
+  </a>
+  Better Approach
+</h3>
+
+<p>Only fetch required fields:<br>
+</p>
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>SELECT id, name, email FROM users;
+
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>Also use:</p>
+
+<ul>
+<li>indexing</li>
+<li>pagination</li>
+<li>query optimization</li>
+<li>caching</li>
+</ul>
+
+<p>Database optimization becomes extremely important as traffic grows.</p>
+
+
+<hr>
+
+<h2>
+  <a name="5-no-pagination" href="#5-no-pagination">
+  </a>
+  5. No Pagination
+</h2>
+
+<p>Returning thousands of records in a single API response is dangerous.</p>
+
+<ul>
+<li>Problems include:</li>
+<li>high memory usage</li>
+<li>slow responses</li>
+<li>frontend lag</li>
+<li>increased server load</li>
+</ul>
+
+<h3>
+  <a name="bad-example" href="#bad-example">
+  </a>
+  Bad Example
+</h3>
+
+
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>GET /users
+
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<h3>
+  <a name="better-example" href="#better-example">
+  </a>
+  Better Example
+</h3>
+
+
+
+<div class="highlight js-code-highlight">
+<pre class="highlight plaintext"><code>GET /users?page=1&amp;limit=20
+
+</code></pre>
+<div class="highlight__panel js-actions-panel">
+<div class="highlight__panel-action js-fullscreen-code-action">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-on"><title>Enter fullscreen mode</title>
+    <path d="M16 3h6v6h-2V5h-4V3zM2 3h6v2H4v4H2V3zm18 16v-4h2v6h-6v-2h4zM4 19h4v2H2v-6h2v4z"></path>
+</svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewbox="0 0 24 24" class="highlight-action crayons-icon highlight-action--fullscreen-off"><title>Exit fullscreen mode</title>
+    <path d="M18 7h4v2h-6V3h2v4zM8 9H2V7h4V3h2v6zm10 8v4h-2v-6h6v2h-4zM8 15v6H6v-4H2v-2h6z"></path>
+</svg>
+
+</div>
+</div>
+</div>
+
+
+
+<p>Pagination makes APIs scalable and improves performance significantly.</p>
+
+
+<hr>
+
+<h2>
+  <a name="final-thoughts" href="#final-thoughts">
+  </a>
+  Final Thoughts
+</h2>
+
+<p>Building APIs is more than just creating endpoints that return data.</p>
+
+<p>A good API should be:</p>
+
+<ul>
+<li>secure</li>
+<li>scalable</li>
+<li>maintainable</li>
+<li>performant</li>
+<li>developer-friendly</li>
+</ul>
+
+<p>Many of the mistakes discussed in this blog may seem small initially, but they become major problems as applications scale.</p>
+
+<p>The best backend developers focus not only on functionality, but also on architecture, performance, security, and long-term maintainability.</p>
+
+<p>If you are serious about backend development, learning proper API design principles early will save you countless hours in the future.</p>
+
+
+<hr>
+
+<h2>
+  <a name="conclusion" href="#conclusion">
+  </a>
+  Conclusion
+</h2>
+
+<p>APIs are the foundation of modern software systems. Poorly designed APIs create technical debt, while well-designed APIs make applications easier to scale and maintain.</p>
+
+<p>Avoiding these common mistakes can help you build production-ready backend systems that are reliable, efficient, and easier to work with.</p>
+
+<p>As your applications grow, these practices become even more important.</p>
+
+<p>Build APIs not just for today — build them for scale, stability, and the future.</p>
+
+<p>What API mistakes have you seen in production systems? Let me know in the comments.</p>
+

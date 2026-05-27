@@ -7,6 +7,9 @@ import SkillsServer from "./(sections)/skills/SkillsServer";
 import ExperienceServer from "./(sections)/experience/ExperienceServer";
 import ContactClient from "./(sections)/contact/ContactClient";
 
+// Force dynamic rendering for this page (required for Dev.to API with no-cache)
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <>

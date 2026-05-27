@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@plugin "@tailwindcss/typography";
 /* Vibrant color scheme */
 :root {
   --background: #fafafa;
@@ -327,4 +327,25 @@ html {
 .skill-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.2);
+}
+
+/* Hide Dev.to specific code block panels */
+.highlight__panel {
+  display: none !important;
+}
+
+/* Better inline code styling for Tailwind Typography */
+.prose code:not(pre code) {
+  background-color: var(--muted);
+  color: var(--primary);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875em;
+}
+
+/* Remove default backticks from Tailwind Typography inline code */
+.prose code::before,
+.prose code::after {
+  content: none !important;
 }

@@ -47,13 +47,19 @@ export default function Header() {
   }, [])
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
-    const id = href.replace('#', '')
-    const el = document.getElementById(id)
-    if (el) {
-      const offset = 80 // Header height
-      const y = el.getBoundingClientRect().top + window.scrollY - offset
-      window.scrollTo({ top: y, behavior: 'smooth' })
+    if (href.startsWith('#')) {
+      e.preventDefault()
+      const id = href.replace('#', '')
+      const el = document.getElementById(id)
+      if (el) {
+        const offset = 80 // Header height
+        const y = el.getBoundingClientRect().top + window.scrollY - offset
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      } else if (id === 'blog') {
+        window.location.href = '/blogs'
+      }
+    } else {
+      window.location.href = href
     }
     setIsOpen(false)
   }
