@@ -1,7 +1,8 @@
 import { getDevtoPosts } from "@/lib/devto";
+import { db } from "@/server/db";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import BlogSeriesList from "@/components/blog/BlogSeriesList";
+import BlogClient from "@/app/(sections)/blog/BlogClient";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -9,7 +10,42 @@ import { ArrowLeft } from "lucide-react";
 export const dynamic = 'force-dynamic';
 
 export default async function AllBlogsPage() {
-    const posts = await getDevtoPosts();
+    let combinedPosts: any[] = [];
+    
+    try {
+        const posts = await getDevtoPosts();
+        
+        // Fetch all custom series from the database
+        const [seriesRows] = await db.query<any[]>("SELECT * FROM featured_blog_series");
+        
+        const seriesSlugs = new Set<string>();
+
+        // 1. Process series and build stack items
+        for (const item of seriesRows) {
+            try {
+                const slugs = JSON.parse(item.slugs);
+                const seriesPosts = slugs.map((slug: string) => posts.find((p: any) => p.slug === slug)).filter(Boolean);
+                
+                if (seriesPosts.length > 0) {
+                    combinedPosts.push({ type: 'series', id: item.id, title: item.title, posts: seriesPosts });
+                    // Keep track of slugs that belong to a series
+                    slugs.forEach((s: string) => seriesSlugs.add(s));
+                }
+            } catch (e) {
+                console.error("Failed to parse series slugs in /blogs", e);
+            }
+        }
+
+        // 2. Add remaining independent posts that aren't part of any series
+        for (const post of posts) {
+            if (!seriesSlugs.has(post.slug)) {
+                combinedPosts.push({ type: 'single', post });
+            }
+        }
+
+    } catch (error) {
+        console.error("Error building blogs page data:", error);
+    }
 
     return (
         <>
@@ -24,16 +60,9 @@ export default async function AllBlogsPage() {
                         <ArrowLeft size={16} /> Back to Home
                     </Link>
 
-                    <div className="text-center mb-16">
-                        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                            All Articles
-                        </h1>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Explore my technical writings, tutorials, and thoughts on software development.
-                        </p>
-                    </div>
-
-                    <BlogSeriesList posts={posts} />
+                    {/* We reuse the BlogClient to render the mixed grid of stacks and single posts. 
+                        showViewAll={false} ensures we don't show the 'View All' buttons at the bottom. */}
+                    <BlogClient posts={combinedPosts} showViewAll={false} />
                 </div>
             </main>
             <Footer />
